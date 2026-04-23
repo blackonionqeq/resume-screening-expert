@@ -1,0 +1,25 @@
+{
+  "role": "Software Engineer — Backend",
+  "required": [
+    "3+ years backend development experience",
+    "Proficiency in Node.js, Python, Go, Java, or Rust",
+    "RESTful or GraphQL API design experience",
+    "SQL database experience"
+  ],
+  "niceToHave": [
+    "Cloud platform experience (AWS, GCP, Azure)",
+    "Docker / Kubernetes",
+    "Microservices or distributed systems",
+    "Open source contributions"
+  ],
+  "disqualifiers": [
+    "No programming experience",
+    "Purely frontend background"
+  ],
+  "scoringGuide": {
+    "90-100": "Exceptional, fast-track",
+    "70-89": "Strong fit, proceed",
+    "50-69": "Partial fit, discretionary",
+    "0-49": "Does not meet requirements"
+  }
+}
