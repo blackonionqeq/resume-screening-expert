@@ -38,9 +38,10 @@ export async function screenResume(
   criteriaContent: string,
   provider: Provider,
   model?: string,
+  baseUrl?: string,
 ): Promise<ScreeningResult> {
   const { object } = await generateObject({
-    model: getModel(provider, model),
+    model: getModel(provider, model, baseUrl),
     schema: ScreeningResult,
     messages: [
       {

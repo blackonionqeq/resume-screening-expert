@@ -35,10 +35,11 @@ program
   .requiredOption('-c, --criteria <file>', 'criteria file (.md or .json)')
   .option('-p, --provider <provider>', 'LLM provider: anthropic | openai | deepseek', 'anthropic')
   .option('-m, --model <model>', 'override the default model for the provider')
+  .option('-b, --base-url <url>', 'override the provider API base URL')
   .option('-o, --output <path>', 'save JSON result to a file')
   .action(async (
     resume: string,
-    options: { criteria: string; provider: string; model?: string; output?: string },
+    options: { criteria: string; provider: string; model?: string; baseUrl?: string; output?: string },
   ) => {
     const provider = options.provider as Provider
     const validProviders: Provider[] = ['anthropic', 'openai', 'deepseek']
@@ -57,7 +58,13 @@ program
       console.log(chalk.green('done'))
 
       process.stdout.write(chalk.blue(`Screening with ${provider}... `))
-      const result = await screenResume(resumeContent, criteriaContent, provider, options.model)
+      const result = await screenResume(
+        resumeContent,
+        criteriaContent,
+        provider,
+        options.model,
+        options.baseUrl,
+      )
       console.log(chalk.green('done'))
 
       console.log('\n' + chalk.bold.underline('Screening Result'))

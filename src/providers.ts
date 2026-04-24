@@ -1,17 +1,7 @@
-import { anthropic } from '@ai-sdk/anthropic'
+import { createAnthropic } from '@ai-sdk/anthropic'
 import { createOpenAI } from '@ai-sdk/openai'
 
 export type Provider = 'anthropic' | 'openai' | 'deepseek'
-
-const openaiProvider = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY ?? '',
-})
-
-// DeepSeek is OpenAI API-compatible
-const deepseekProvider = createOpenAI({
-  baseURL: 'https://api.deepseek.com/v1',
-  apiKey: process.env.DEEPSEEK_API_KEY ?? '',
-})
 
 const DEFAULT_MODELS: Record<Provider, string> = {
   anthropic: 'claude-sonnet-4-6',
@@ -19,14 +9,23 @@ const DEFAULT_MODELS: Record<Provider, string> = {
   deepseek: 'deepseek-chat',
 }
 
-export function getModel(provider: Provider, model?: string) {
+export function getModel(provider: Provider, model?: string, baseUrl?: string) {
   const modelId = model ?? DEFAULT_MODELS[provider]
   switch (provider) {
     case 'anthropic':
-      return anthropic(modelId)
+      return createAnthropic({
+        apiKey: process.env.ANTHROPIC_API_KEY ?? '',
+        ...(baseUrl ? { baseURL: baseUrl } : {}),
+      })(modelId)
     case 'openai':
-      return openaiProvider(modelId)
+      return createOpenAI({
+        apiKey: process.env.OPENAI_API_KEY ?? '',
+        ...(baseUrl ? { baseURL: baseUrl } : {}),
+      })(modelId)
     case 'deepseek':
-      return deepseekProvider(modelId)
+      return createOpenAI({
+        baseURL: baseUrl ?? 'https://api.deepseek.com/v1',
+        apiKey: process.env.DEEPSEEK_API_KEY ?? '',
+      })(modelId)
   }
 }
