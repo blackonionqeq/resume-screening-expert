@@ -6,7 +6,7 @@ export type Provider = 'anthropic' | 'openai' | 'deepseek'
 const DEFAULT_MODELS: Record<Provider, string> = {
   anthropic: 'claude-sonnet-4-6',
   openai: 'gpt-4o',
-  deepseek: 'deepseek-chat',
+  deepseek: 'deepseek-v4-pro',
 }
 
 export function getModel(provider: Provider, model?: string, baseUrl?: string) {
@@ -24,7 +24,7 @@ export function getModel(provider: Provider, model?: string, baseUrl?: string) {
       })(modelId)
     case 'deepseek':
       return createOpenAI({
-        baseURL: baseUrl ?? 'https://api.deepseek.com/v1',
+        baseURL: baseUrl ?? 'https://api.deepseek.com',
         apiKey: process.env.DEEPSEEK_API_KEY ?? '',
       })(modelId)
   }

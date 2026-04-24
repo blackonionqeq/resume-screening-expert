@@ -1,4 +1,6 @@
 #!/bin/bash
+set -o pipefail
+
 # 批量转换 resumes/ 下的 PDF 并打分
 # 用法: ./batch-screen.sh [provider] [criteria] [model] [base-url]
 #   provider  默认 deepseek（可选: anthropic, openai, deepseek）
@@ -44,7 +46,11 @@ for pdf in "$RESUME_DIR"/*.pdf; do
 
   # 1. 转换 PDF → MD
   echo "  → 转换 PDF..."
-  if pnpm dev convert "$pdf" -o "$md_file" 2>&1 | tail -1; then
+  convert_output=$(pnpm dev convert "$pdf" -o "$md_file" 2>&1)
+  convert_status=$?
+  printf '%s\n' "$convert_output" | tail -1
+
+  if [ "$convert_status" -eq 0 ]; then
     echo "  ✓ 已保存: $md_file"
   else
     echo "  ✗ 转换失败，跳过"

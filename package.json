@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/cli.ts"
+    "dev": "node --import tsx src/cli.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.0",

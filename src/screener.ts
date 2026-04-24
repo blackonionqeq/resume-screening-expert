@@ -42,12 +42,14 @@ export async function screenResume(
 ): Promise<ScreeningResult> {
   const { object } = await generateObject({
     model: getModel(provider, model, baseUrl),
+    mode: provider === 'deepseek' ? 'json' : 'auto',
     schema: ScreeningResult,
+    schemaName: 'screening_result',
     messages: [
       {
         role: 'system',
         content:
-          'You are an expert recruiter. Evaluate the resume strictly against the provided screening criteria and return a structured assessment.',
+          'You are an expert recruiter. Evaluate the resume strictly against the provided screening criteria and return only valid JSON that matches the requested structured assessment.',
       },
       {
         role: 'user',

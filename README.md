@@ -95,7 +95,7 @@ pnpm dev screen <resume> \
 Options:
 
 - `-c, --criteria <file>` required, supports `.md` or `.json`
-- `-p, --provider <provider>` optional, default is `anthropic`
+- `-p, --provider <provider>` optional, CLI default is `anthropic`
 - `-m, --model <model>` optional, overrides the provider default model
 - `-b, --base-url <url>` optional, overrides the provider API base URL
 - `-o, --output <path>` optional, saves the structured result as JSON
@@ -144,7 +144,7 @@ pnpm dev screen resumes/example.pdf \
 
 Default model:
 
-- `deepseek-chat`
+- `deepseek-v4-pro`
 
 Example:
 
@@ -154,13 +154,26 @@ pnpm dev screen resumes/example.pdf \
   -p deepseek
 ```
 
+Explicit model example:
+
+```bash
+pnpm dev screen resumes/example.pdf \
+  -c criteria/software-engineer.md \
+  -p deepseek \
+  -m deepseek-v4-pro
+```
+
 By default DeepSeek uses:
 
 ```text
-https://api.deepseek.com/v1
+https://api.deepseek.com
 ```
 
-You can override that with `--base-url`.
+`https://api.deepseek.com/v1` is still a compatible OpenAI-style path, but it is not tied to the model version.
+
+This project uses JSON-mode structured output for DeepSeek because the AI SDK's default tool-calling object mode can fail against DeepSeek with errors like `tool_choice` unsupported.
+
+You can override the base URL with `--base-url`.
 
 ## Batch Screening
 
@@ -183,6 +196,12 @@ Examples:
 
 ```bash
 ./batch-screen.sh
+```
+
+This is equivalent to:
+
+```bash
+./batch-screen.sh deepseek criteria/frontend-developer.md deepseek-v4-pro
 ```
 
 ```bash
@@ -231,3 +250,9 @@ Run the CLI:
 ```bash
 pnpm dev screen resumes/example.pdf -c criteria/software-engineer.md -p openai
 ```
+
+## Troubleshooting
+
+- If DeepSeek returns an error mentioning `tool_choice`, the request is likely using tool-calling structured output instead of JSON-mode structured output.
+- If you use a custom proxy, keep the model ID as `deepseek-v4-pro` and only override `--base-url`.
+- `batch-screen.sh` defaults to DeepSeek, but the standalone `pnpm dev screen` command still defaults to `anthropic` unless you pass `-p deepseek`.
